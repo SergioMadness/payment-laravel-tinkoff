@@ -1,0 +1,47 @@
+{
+  "name": "professionalweb/payment-laravel-tinkoff",
+  "description": "Driver for tinkoff",
+  "homepage": "http://web-development.pw/",
+  "keywords": [
+    "pwf",
+    "professional web",
+    "web-development.pw",
+    "composer",
+    "payment system",
+    "tinkoff",
+    "laravel"
+  ],
+  "minimum-stability": "stable",
+  "type": "library",
+  "license": "MIT",
+  "authors": [
+    {
+      "name": "Zinchenko Sergey",
+      "email": "zinchenko@web-development.pw"
+    }
+  ],
+  "support": {
+    "email": "info@web-development.pw",
+    "issues": "https://github.com/SergioMadness/payonline/issues",
+    "wiki": "https://github.com/SergioMadness/payonline/wiki",
+    "source": "https://github.com/SergioMadness/payonline/releases"
+  },
+  "require": {
+    "illuminate/support": "5.2.* || 5.3.* || 5.4.* || 5.5.*",
+    "alcohol/iso4217": "*",
+    "payment-laravel": "3.*"
+  },
+  "require-dev": {
+    "codeception/codeception": "*",
+    "satooshi/php-coveralls": "*",
+    "codeclimate/php-test-reporter": "*"
+  },
+  "config": {
+    "process-timeout": 1800
+  },
+  "autoload": {
+    "psr-4": {
+      "professionalweb\\payment\\": "src/"
+    }
+  }
+}
