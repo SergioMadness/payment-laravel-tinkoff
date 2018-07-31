@@ -54,7 +54,6 @@ class TinkoffProvider extends ServiceProvider
                 new TinkoffProtocol(config('payment.tinkoff.merchantId'), config('payment.tinkoff.secretKey'), config('payment.tinkoff.apiUrl'))
             );
         });
-        $this->app->bind('\Payment', Payment::class);
     }
 
     /**
@@ -64,6 +63,6 @@ class TinkoffProvider extends ServiceProvider
      */
     public function provides()
     {
-        return [PayService::class, TinkoffDriver::class, '\professionalweb\payment\Tinkoff', '\Payment'];
+        return [PayService::class, TinkoffDriver::class, '\professionalweb\payment\Tinkoff'];
     }
 }
