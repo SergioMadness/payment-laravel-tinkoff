@@ -4,12 +4,13 @@ use Alcohol\ISO4217;
 use Illuminate\Contracts\Support\Arrayable;
 use professionalweb\payment\contracts\PayService;
 use professionalweb\payment\contracts\PayProtocol;
+use professionalweb\payment\interfaces\TinkoffService;
 
 /**
  * Payment service. Pay, Check, etc
  * @package AlpinaDigital\Services
  */
-class TinkoffDriver implements PayService
+class TinkoffDriver implements PayService, TinkoffService
 {
     /**
      * TinkoffMerchantAPI object

@@ -2,6 +2,8 @@
 
 use Illuminate\Support\ServiceProvider;
 use professionalweb\payment\contracts\PayService;
+use professionalweb\payment\contracts\PaymentFacade;
+use professionalweb\payment\interfaces\TinkoffService;
 use professionalweb\payment\drivers\tinkoff\TinkoffDriver;
 use professionalweb\payment\drivers\tinkoff\TinkoffProtocol;
 
@@ -19,6 +21,12 @@ class TinkoffProvider extends ServiceProvider
      */
     protected $defer = true;
 
+    public function boot()
+    {
+        app(PaymentFacade::class)->registerDriver(TinkoffService::PAYMENT_TINKOFF, TinkoffService::class);
+    }
+
+
     /**
      * Bind two classes
      *
@@ -26,6 +34,11 @@ class TinkoffProvider extends ServiceProvider
      */
     public function register()
     {
+        $this->app->bind(TinkoffService::class, function ($app) {
+            return (new TinkoffDriver(config('payment.tinkoff')))->setTransport(
+                new TinkoffProtocol(config('payment.tinkoff.merchantId'), config('payment.tinkoff.secretKey'), config('payment.tinkoff.apiUrl'))
+            );
+        });
         $this->app->bind(PayService::class, function ($app) {
             return (new TinkoffDriver(config('payment.tinkoff')))->setTransport(
                 new TinkoffProtocol(config('payment.tinkoff.merchantId'), config('payment.tinkoff.secretKey'), config('payment.tinkoff.apiUrl'))
