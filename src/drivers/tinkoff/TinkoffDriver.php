@@ -8,7 +8,7 @@ use professionalweb\payment\interfaces\TinkoffService;
 
 /**
  * Payment service. Pay, Check, etc
- * @package AlpinaDigital\Services
+ * @package professionalweb\payment\drivers\tinkoff
  */
 class TinkoffDriver implements PayService, TinkoffService
 {
