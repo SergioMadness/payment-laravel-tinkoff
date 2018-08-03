@@ -14,12 +14,6 @@ use professionalweb\payment\drivers\tinkoff\TinkoffProtocol;
  */
 class TinkoffProvider extends ServiceProvider
 {
-    /**
-     * Indicates if loading of the provider is deferred.
-     *
-     * @var bool
-     */
-    protected $defer = true;
 
     public function boot()
     {
@@ -54,15 +48,5 @@ class TinkoffProvider extends ServiceProvider
                 new TinkoffProtocol(config('payment.tinkoff.merchantId'), config('payment.tinkoff.secretKey'), config('payment.tinkoff.apiUrl'))
             );
         });
-    }
-
-    /**
-     * Get the services provided by the provider.
-     *
-     * @return array
-     */
-    public function provides()
-    {
-        return [PayService::class, TinkoffDriver::class, '\professionalweb\payment\Tinkoff'];
     }
 }
