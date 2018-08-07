@@ -1,9 +1,11 @@
 <?php namespace professionalweb\payment\drivers\tinkoff;
 
 use Alcohol\ISO4217;
+use professionalweb\payment\Form;
 use Illuminate\Contracts\Support\Arrayable;
 use professionalweb\payment\contracts\PayService;
 use professionalweb\payment\contracts\PayProtocol;
+use professionalweb\payment\contracts\Form as IForm;
 use professionalweb\payment\interfaces\TinkoffService;
 
 /**
@@ -341,7 +343,7 @@ class TinkoffDriver implements PayService, TinkoffService
      *
      * @return bool
      */
-    public function needForm(): bool
+    public function needForm()
     {
         return false;
     }
@@ -360,7 +362,7 @@ class TinkoffDriver implements PayService, TinkoffService
      * @param array     $extraParams
      * @param Arrayable $receipt
      *
-     * @return string
+     * @return IForm
      */
     public function getPaymentForm($orderId,
                                    $paymentId,
@@ -373,6 +375,6 @@ class TinkoffDriver implements PayService, TinkoffService
                                    $extraParams = [],
                                    $receipt = null)
     {
-        return '';
+        return new Form();
     }
 }
