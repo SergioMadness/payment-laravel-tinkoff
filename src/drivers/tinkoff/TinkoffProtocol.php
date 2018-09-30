@@ -19,10 +19,10 @@ class TinkoffProtocol extends \TinkoffMerchantAPI implements PayProtocol
      * @return string
      * @throws \Exception
      */
-    public function getPaymentUrl($params)
+    public function getPaymentUrl(array $params): string
     {
         $this->init($params);
-        if ($this->error != '') {
+        if ($this->error !== '') {
             throw new \Exception($this->error);
         }
 
@@ -36,14 +36,14 @@ class TinkoffProtocol extends \TinkoffMerchantAPI implements PayProtocol
      *
      * @return bool
      */
-    public function validate($params)
+    public function validate(array $params): bool
     {
         $result = false;
 
         if (isset($params['Token'])) {
             $token = $params['Token'];
             unset($params['Token']);
-            if ($token != '' && $this->genToken($params) == $token) {
+            if ($token !== '' && $this->genToken($params) === $token) {
                 $result = true;
             }
         }
@@ -54,9 +54,9 @@ class TinkoffProtocol extends \TinkoffMerchantAPI implements PayProtocol
     /**
      * Get payment ID
      *
-     * @return mixed
+     * @return string
      */
-    public function getPaymentId()
+    public function getPaymentId(): string
     {
         return $this->paymentId;
     }
@@ -69,9 +69,9 @@ class TinkoffProtocol extends \TinkoffMerchantAPI implements PayProtocol
      *
      * @return string
      */
-    public function getNotificationResponse($requestData, $errorCode)
+    public function getNotificationResponse($requestData, $errorCode): string
     {
-        return $errorCode > 0 ? response('ERROR') : response('OK');
+        return $errorCode > 0 ? 'ERROR' : 'OK';
     }
 
     /**
@@ -82,8 +82,20 @@ class TinkoffProtocol extends \TinkoffMerchantAPI implements PayProtocol
      *
      * @return string
      */
-    public function getCheckResponse($requestData, $errorCode)
+    public function getCheckResponse($requestData, $errorCode): string
     {
-        return $errorCode > 0 ? response('ERROR') : response('OK');
+        return $errorCode > 0 ? 'ERROR' : 'OK';
+    }
+
+    /**
+     * Prepare parameters
+     *
+     * @param array $params
+     *
+     * @return array
+     */
+    public function prepareParams(array $params): array
+    {
+        return $params;
     }
 }

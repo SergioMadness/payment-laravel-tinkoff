@@ -1,12 +1,15 @@
 <?php namespace professionalweb\payment\drivers\tinkoff;
 
 use Alcohol\ISO4217;
+use Illuminate\Http\Response;
+use professionalweb\payment\contracts\Receipt;
 use professionalweb\payment\Form;
 use Illuminate\Contracts\Support\Arrayable;
 use professionalweb\payment\contracts\PayService;
 use professionalweb\payment\contracts\PayProtocol;
 use professionalweb\payment\contracts\Form as IForm;
 use professionalweb\payment\interfaces\TinkoffService;
+use professionalweb\payment\models\PayServiceOption;
 
 /**
  * Payment service. Pay, Check, etc
@@ -35,7 +38,7 @@ class TinkoffDriver implements PayService, TinkoffService
      */
     protected $response;
 
-    public function __construct($config)
+    public function __construct(array $config = [])
     {
         $this->setConfig($config);
     }
@@ -47,30 +50,30 @@ class TinkoffDriver implements PayService, TinkoffService
      * @param int        $paymentId
      * @param float      $amount
      * @param int|string $currency
+     * @param string     $paymentType
      * @param string     $successReturnUrl
      * @param string     $failReturnUrl
      * @param string     $description
      * @param array      $extraParams
-     * @param Arrayable  $receipt
+     * @param Receipt    $receipt
      *
      * @return string
-     * @throws \Exception
      */
     public function getPaymentLink($orderId,
                                    $paymentId,
-                                   $amount,
-                                   $currency = self::CURRENCY_RUR_ISO,
-                                   $paymentType = self::PAYMENT_TYPE_CARD,
-                                   $successReturnUrl = '',
-                                   $failReturnUrl = '',
-                                   $description = '',
-                                   $extraParams = [],
-                                   $receipt = null)
+                                   float $amount,
+                                   string $currency = self::CURRENCY_RUR_ISO,
+                                   string $paymentType = self::PAYMENT_TYPE_CARD,
+                                   string $successReturnUrl = '',
+                                   string $failReturnUrl = '',
+                                   string $description = '',
+                                   array $extraParams = [],
+                                   Receipt $receipt = null): string
     {
         $extraParams['PaymentId'] = $paymentId;
         $DATA = '';
         array_walk($extraParams, function ($val, $key) use (&$DATA) {
-            if ($DATA != '') {
+            if ($DATA !== '') {
                 $DATA .= '|';
             }
             $DATA .= $key . '=' . $val;
@@ -100,7 +103,7 @@ class TinkoffDriver implements PayService, TinkoffService
      *
      * @return bool
      */
-    public function validate($data)
+    public function validate(array $data): bool
     {
         return $this->getTransport()->validate($data);
     }
@@ -110,7 +113,7 @@ class TinkoffDriver implements PayService, TinkoffService
      *
      * @return array
      */
-    public function getConfig()
+    public function getConfig(): array
     {
         return $this->config;
     }
@@ -122,7 +125,7 @@ class TinkoffDriver implements PayService, TinkoffService
      *
      * @return $this
      */
-    public function setConfig($config)
+    public function setConfig(array $config): self
     {
         $this->config = $config;
 
@@ -134,9 +137,9 @@ class TinkoffDriver implements PayService, TinkoffService
      *
      * @param array $data
      *
-     * @return mixed
+     * @return PayService
      */
-    public function setResponse($data)
+    public function setResponse(array $data): PayService
     {
         $data['DateTime'] = date('Y-m-d H:i:s');
         $this->response = $data;
@@ -152,9 +155,9 @@ class TinkoffDriver implements PayService, TinkoffService
      *
      * @return mixed|string
      */
-    public function getResponseParam($name, $default = '')
+    public function getResponseParam(string $name, $default = '')
     {
-        return isset($this->response[$name]) ? $this->response[$name] : $default;
+        return $this->response[$name] ?? $default;
     }
 
     /**
@@ -162,7 +165,7 @@ class TinkoffDriver implements PayService, TinkoffService
      *
      * @return string
      */
-    public function getOrderId()
+    public function getOrderId(): string
     {
         return $this->getResponseParam('OrderId');
     }
@@ -172,7 +175,7 @@ class TinkoffDriver implements PayService, TinkoffService
      *
      * @return string
      */
-    public function getStatus()
+    public function getStatus(): string
     {
         return $this->getResponseParam('Status');
     }
@@ -182,7 +185,7 @@ class TinkoffDriver implements PayService, TinkoffService
      *
      * @return bool
      */
-    public function isSuccess()
+    public function isSuccess(): bool
     {
         return $this->getResponseParam('Success', 'false') === 'true';
     }
@@ -192,7 +195,7 @@ class TinkoffDriver implements PayService, TinkoffService
      *
      * @return string
      */
-    public function getTransactionId()
+    public function getTransactionId(): string
     {
         return $this->getResponseParam('PaymentId');
     }
@@ -202,17 +205,17 @@ class TinkoffDriver implements PayService, TinkoffService
      *
      * @return float
      */
-    public function getAmount()
+    public function getAmount(): float
     {
-        return $this->getResponseParam('Amount');
+        return (float)$this->getResponseParam('Amount');
     }
 
     /**
      * Get error code
      *
-     * @return int
+     * @return string
      */
-    public function getErrorCode()
+    public function getErrorCode(): string
     {
         return $this->getResponseParam('ErrorCode');
     }
@@ -222,9 +225,9 @@ class TinkoffDriver implements PayService, TinkoffService
      *
      * @return string
      */
-    public function getProvider()
+    public function getProvider(): string
     {
-        return 'tinkoff';
+        return self::PAYMENT_TINKOFF;
     }
 
     /**
@@ -232,7 +235,7 @@ class TinkoffDriver implements PayService, TinkoffService
      *
      * @return string
      */
-    public function getPan()
+    public function getPan(): string
     {
         return $this->getResponseParam('Pan');
     }
@@ -242,7 +245,7 @@ class TinkoffDriver implements PayService, TinkoffService
      *
      * @return string
      */
-    public function getDateTime()
+    public function getDateTime(): string
     {
         return $this->getResponseParam('DateTime');
     }
@@ -254,7 +257,7 @@ class TinkoffDriver implements PayService, TinkoffService
      *
      * @return $this
      */
-    public function setTransport(PayProtocol $protocol)
+    public function setTransport(PayProtocol $protocol): PayService
     {
         $this->transport = $protocol;
 
@@ -266,7 +269,7 @@ class TinkoffDriver implements PayService, TinkoffService
      *
      * @return PayProtocol
      */
-    public function getTransport()
+    public function getTransport(): PayProtocol
     {
         return $this->transport;
     }
@@ -276,11 +279,11 @@ class TinkoffDriver implements PayService, TinkoffService
      *
      * @param int $errorCode
      *
-     * @return string
+     * @return Response
      */
-    public function getNotificationResponse($errorCode = null)
+    public function getNotificationResponse(int $errorCode = null): Response
     {
-        return $this->getTransport()->getNotificationResponse($this->response, $errorCode);
+        return response($this->getTransport()->getNotificationResponse($this->response, $errorCode));
     }
 
     /**
@@ -288,11 +291,11 @@ class TinkoffDriver implements PayService, TinkoffService
      *
      * @param int $errorCode
      *
-     * @return string
+     * @return Response
      */
-    public function getCheckResponse($errorCode = null)
+    public function getCheckResponse(int $errorCode = null): Response
     {
-        return $this->getTransport()->getNotificationResponse($this->response, $errorCode);
+        return response($this->getTransport()->getNotificationResponse($this->response, $errorCode));
     }
 
     /**
@@ -300,7 +303,7 @@ class TinkoffDriver implements PayService, TinkoffService
      *
      * @return int
      */
-    public function getLastError()
+    public function getLastError(): int
     {
         return 0;
     }
@@ -312,7 +315,7 @@ class TinkoffDriver implements PayService, TinkoffService
      *
      * @return mixed
      */
-    public function getParam($name)
+    public function getParam(string $name)
     {
         return $this->getResponseParam($name);
     }
@@ -322,9 +325,9 @@ class TinkoffDriver implements PayService, TinkoffService
      *
      * @return string
      */
-    public function getName()
+    public function getName(): string
     {
-        return 'tinkoff';
+        return self::PAYMENT_TINKOFF;
     }
 
     /**
@@ -332,7 +335,7 @@ class TinkoffDriver implements PayService, TinkoffService
      *
      * @return string
      */
-    public function getPaymentId()
+    public function getPaymentId(): string
     {
         return $this->getResponseParam('PaymentId');
     }
@@ -343,7 +346,7 @@ class TinkoffDriver implements PayService, TinkoffService
      *
      * @return bool
      */
-    public function needForm()
+    public function needForm(): bool
     {
         return false;
     }
@@ -351,30 +354,44 @@ class TinkoffDriver implements PayService, TinkoffService
     /**
      * Generate payment form
      *
-     * @param int       $orderId
-     * @param int       $paymentId
-     * @param float     $amount
-     * @param string    $currency
-     * @param string    $paymentType
-     * @param string    $successReturnUrl
-     * @param string    $failReturnUrl
-     * @param string    $description
-     * @param array     $extraParams
-     * @param Arrayable $receipt
+     * @param int     $orderId
+     * @param int     $paymentId
+     * @param float   $amount
+     * @param string  $currency
+     * @param string  $paymentType
+     * @param string  $successReturnUrl
+     * @param string  $failReturnUrl
+     * @param string  $description
+     * @param array   $extraParams
+     * @param Receipt $receipt
      *
      * @return IForm
      */
     public function getPaymentForm($orderId,
                                    $paymentId,
-                                   $amount,
-                                   $currency = self::CURRENCY_RUR,
-                                   $paymentType = self::PAYMENT_TYPE_CARD,
-                                   $successReturnUrl = '',
-                                   $failReturnUrl = '',
-                                   $description = '',
-                                   $extraParams = [],
-                                   $receipt = null)
+                                   float $amount,
+                                   string $currency = self::CURRENCY_RUR,
+                                   string $paymentType = self::PAYMENT_TYPE_CARD,
+                                   string $successReturnUrl = '',
+                                   string $failReturnUrl = '',
+                                   string $description = '',
+                                   array $extraParams = [],
+                                   Receipt $receipt = null): IForm
     {
         return new Form();
+    }
+
+    /**
+     * Get pay service options
+     *
+     * @return array
+     */
+    public function getOptions(): array
+    {
+        return [
+            (new PayServiceOption())->setType(PayServiceOption::TYPE_STRING)->setLabel('Url')->setAlias('apiUrl'),
+            (new PayServiceOption())->setType(PayServiceOption::TYPE_STRING)->setLabel('Merchant Id')->setAlias('merchantId'),
+            (new PayServiceOption())->setType(PayServiceOption::TYPE_STRING)->setLabel('Secret key')->setAlias('secretKey'),
+        ];
     }
 }

@@ -27,14 +27,11 @@
     "source": "https://github.com/SergioMadness/payonline/releases"
   },
   "require": {
-    "illuminate/support": "5.2.* || 5.3.* || 5.4.* || 5.5.*",
+    "illuminate/support": "5.*",
     "alcohol/iso4217": "*",
-    "professionalweb/payment-laravel": "dev-devide-drivers"
+    "professionalweb/payment-laravel": "^4.0"
   },
   "require-dev": {
-    "codeception/codeception": "*",
-    "satooshi/php-coveralls": "*",
-    "codeclimate/php-test-reporter": "*"
   },
   "config": {
     "process-timeout": 1800
@@ -42,6 +39,13 @@
   "autoload": {
     "psr-4": {
       "professionalweb\\payment\\": "src/"
+    }
+  },
+  "extra": {
+    "laravel": {
+      "providers": [
+        "professionalweb\\payment\\TinkoffProvider"
+      ]
     }
   }
 }

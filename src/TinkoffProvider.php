@@ -7,7 +7,6 @@ use professionalweb\payment\interfaces\TinkoffService;
 use professionalweb\payment\drivers\tinkoff\TinkoffDriver;
 use professionalweb\payment\drivers\tinkoff\TinkoffProtocol;
 
-
 /**
  * Tinkoff payment provider
  * @package professionalweb\payment
@@ -15,7 +14,7 @@ use professionalweb\payment\drivers\tinkoff\TinkoffProtocol;
 class TinkoffProvider extends ServiceProvider
 {
 
-    public function boot()
+    public function boot(): void
     {
         app(PaymentFacade::class)->registerDriver(TinkoffService::PAYMENT_TINKOFF, TinkoffService::class);
     }
@@ -26,7 +25,7 @@ class TinkoffProvider extends ServiceProvider
      *
      * @return void
      */
-    public function register()
+    public function register(): void
     {
         $this->app->bind(TinkoffService::class, function ($app) {
             return (new TinkoffDriver(config('payment.tinkoff')))->setTransport(
