@@ -22,14 +22,14 @@
   ],
   "support": {
     "email": "info@web-development.pw",
-    "issues": "https://github.com/SergioMadness/payonline/issues",
-    "wiki": "https://github.com/SergioMadness/payonline/wiki",
-    "source": "https://github.com/SergioMadness/payonline/releases"
+    "issues": "https://github.com/SergioMadness/payment-laravel-tinkoff/issues",
+    "wiki": "https://github.com/SergioMadness/payment-laravel-tinkoff/wiki",
+    "source": "https://github.com/SergioMadness/payment-laravel-tinkoff/releases"
   },
   "require": {
     "illuminate/support": "5.*",
     "alcohol/iso4217": "*",
-    "professionalweb/payment-laravel": "dev-improvement/interface-add-options"
+    "professionalweb/payment-laravel": "^4.0"
   },
   "require-dev": {
   },
