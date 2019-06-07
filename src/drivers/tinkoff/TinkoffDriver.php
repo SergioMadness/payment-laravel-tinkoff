@@ -2,20 +2,21 @@
 
 use Alcohol\ISO4217;
 use Illuminate\Http\Response;
-use professionalweb\payment\contracts\Receipt;
 use professionalweb\payment\Form;
 use Illuminate\Contracts\Support\Arrayable;
+use professionalweb\payment\contracts\Receipt;
 use professionalweb\payment\contracts\PayService;
 use professionalweb\payment\contracts\PayProtocol;
 use professionalweb\payment\contracts\Form as IForm;
-use professionalweb\payment\interfaces\TinkoffService;
 use professionalweb\payment\models\PayServiceOption;
+use professionalweb\payment\interfaces\TinkoffService;
+use professionalweb\payment\contracts\recurring\RecurringPayment;
 
 /**
  * Payment service. Pay, Check, etc
  * @package professionalweb\payment\drivers\tinkoff
  */
-class TinkoffDriver implements PayService, TinkoffService
+class TinkoffDriver implements PayService, TinkoffService, RecurringPayment
 {
     /**
      * TinkoffMerchantAPI object
@@ -37,6 +38,11 @@ class TinkoffDriver implements PayService, TinkoffService
      * @var array
      */
     protected $response;
+
+    /**
+     * @var bool
+     */
+    private $needRecurring = false;
 
     public function __construct(array $config = [])
     {
@@ -87,6 +93,10 @@ class TinkoffDriver implements PayService, TinkoffService
         ];
         if ($receipt instanceof Arrayable) {
             $data['Receipt'] = (string)$receipt;
+        }
+        if ($this->needRecurring()) {
+            $data['Recurrent'] = 'Y';
+            $data['CustomerKey'] = '';
         }
 
         $paymentUrl = $this->getTransport()->getPaymentUrl($data);
@@ -393,5 +403,37 @@ class TinkoffDriver implements PayService, TinkoffService
             (new PayServiceOption())->setType(PayServiceOption::TYPE_STRING)->setLabel('Merchant Id')->setAlias('merchantId'),
             (new PayServiceOption())->setType(PayServiceOption::TYPE_STRING)->setLabel('Secret key')->setAlias('secretKey'),
         ];
+    }
+
+    /**
+     * Get payment token
+     *
+     * @return string
+     */
+    public function getRecurringPayment(): string
+    {
+        return $this->getResponseParam('RebillId');
+    }
+
+    /**
+     * Remember payment fo recurring payments
+     *
+     * @return RecurringPayment
+     */
+    public function makeRecurring(): RecurringPayment
+    {
+        $this->needRecurring = true;
+
+        return $this;
+    }
+
+    /**
+     * Check payment need to be recurrent
+     *
+     * @return bool
+     */
+    public function needRecurring(): bool
+    {
+        return $this->needRecurring;
     }
 }

@@ -29,7 +29,7 @@
   "require": {
     "illuminate/support": "5.*",
     "alcohol/iso4217": "*",
-    "professionalweb/payment-laravel": "^4.0"
+    "professionalweb/payment-laravel": "3.1.x-dev"
   },
   "require-dev": {
   },
@@ -46,6 +46,9 @@
       "providers": [
         "professionalweb\\payment\\TinkoffProvider"
       ]
+    },
+    "branch-alias": {
+      "dev-improvement/improve-interface": "1.1.x-dev"
     }
   }
 }
