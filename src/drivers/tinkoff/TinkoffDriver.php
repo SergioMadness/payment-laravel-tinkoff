@@ -44,6 +44,11 @@ class TinkoffDriver implements PayService, TinkoffService, RecurringPayment
      */
     private $needRecurring = false;
 
+    /**
+     * @var string
+     */
+    private $userId;
+
     public function __construct(array $config = [])
     {
         $this->setConfig($config);
@@ -96,7 +101,7 @@ class TinkoffDriver implements PayService, TinkoffService, RecurringPayment
         }
         if ($this->needRecurring()) {
             $data['Recurrent'] = 'Y';
-            $data['CustomerKey'] = '';
+            $data['CustomerKey'] = $this->getUserId();
         }
 
         $paymentUrl = $this->getTransport()->getPaymentUrl($data);
@@ -435,5 +440,29 @@ class TinkoffDriver implements PayService, TinkoffService, RecurringPayment
     public function needRecurring(): bool
     {
         return $this->needRecurring;
+    }
+
+    /**
+     * Set user id payment will be assigned
+     *
+     * @param string $id
+     *
+     * @return RecurringPayment
+     */
+    public function setUserId(string $id): RecurringPayment
+    {
+        $this->userId = $id;
+
+        return $this;
+    }
+
+    /**
+     * Get user id
+     *
+     * @return null|string
+     */
+    public function getUserId(): ?string
+    {
+        return $this->userId;
     }
 }
