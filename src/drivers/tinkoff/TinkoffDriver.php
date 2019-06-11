@@ -1,6 +1,7 @@
 <?php namespace professionalweb\payment\drivers\tinkoff;
 
 use Alcohol\ISO4217;
+use Illuminate\Support\Arr;
 use Illuminate\Http\Response;
 use professionalweb\payment\Form;
 use Illuminate\Contracts\Support\Arrayable;
@@ -172,7 +173,7 @@ class TinkoffDriver implements PayService, TinkoffService, RecurringPayment
      */
     public function getResponseParam(string $name, $default = '')
     {
-        return $this->response[$name] ?? $default;
+        return Arr::get($this->response, $name, $default);
     }
 
     /**
