@@ -299,7 +299,7 @@ class TinkoffDriver implements PayService, TinkoffService, RecurringPayment
      */
     public function getNotificationResponse(int $errorCode = null): Response
     {
-        return response($this->getTransport()->getNotificationResponse($this->response, $errorCode));
+        return response($this->getTransport()->getNotificationResponse($this->response, $this->mapError($errorCode)));
     }
 
     /**
@@ -311,7 +311,24 @@ class TinkoffDriver implements PayService, TinkoffService, RecurringPayment
      */
     public function getCheckResponse(int $errorCode = null): Response
     {
-        return response($this->getTransport()->getNotificationResponse($this->response, $errorCode));
+        return response($this->getTransport()->getNotificationResponse($this->response, $this->mapError($errorCode)));
+    }
+
+    /**
+     * Get specific error code
+     *
+     * @param int $error
+     *
+     * @return int
+     */
+    protected function mapError(int $error): int
+    {
+        $map = [
+            self::RESPONSE_SUCCESS => 0,
+            self::RESPONSE_ERROR   => 1,
+        ];
+
+        return $map[$error] ?? $map[self::RESPONSE_ERROR];
     }
 
     /**
@@ -465,5 +482,20 @@ class TinkoffDriver implements PayService, TinkoffService, RecurringPayment
     public function getUserId(): ?string
     {
         return $this->userId;
+    }
+
+    /**
+     * Initialize recurring payment
+     *
+     * @param string $token
+     * @param float  $amount
+     * @param string $description
+     * @param string $currency
+     *
+     * @return bool
+     */
+    public function initPayment(string $token, float $amount, string $description, string $currency = PayService::CURRENCY_RUR_ISO): bool
+    {
+        // TODO: Implement initPayment() method.
     }
 }
