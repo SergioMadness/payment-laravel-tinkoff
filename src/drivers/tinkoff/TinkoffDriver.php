@@ -419,7 +419,7 @@ class TinkoffDriver implements PayService, TinkoffService, RecurringPayment
      *
      * @return array
      */
-    public function getOptions(): array
+    public static function getOptions(): array
     {
         return [
             (new PayServiceOption())->setType(PayServiceOption::TYPE_STRING)->setLabel('Url')->setAlias('apiUrl'),
