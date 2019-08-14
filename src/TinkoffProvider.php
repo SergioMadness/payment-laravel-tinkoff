@@ -16,7 +16,7 @@ class TinkoffProvider extends ServiceProvider
 
     public function boot(): void
     {
-        app(PaymentFacade::class)->registerDriver(TinkoffService::PAYMENT_TINKOFF, TinkoffService::class);
+        app(PaymentFacade::class)->registerDriver(TinkoffService::PAYMENT_TINKOFF, TinkoffService::class, TinkoffDriver::getOptions());
     }
 
 
