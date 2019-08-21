@@ -28,22 +28,22 @@ class TinkoffProvider extends ServiceProvider
     public function register(): void
     {
         $this->app->bind(TinkoffService::class, function ($app) {
-            return (new TinkoffDriver(config('payment.tinkoff', [])))->setTransport(
+            return (new TinkoffDriver(config('payment.tinkoff', [])))->setTinkoffProtocol(
                 new TinkoffProtocol(config('payment.tinkoff.merchantId', ''), config('payment.tinkoff.secretKey', ''), config('payment.tinkoff.apiUrl', ''))
             );
         });
         $this->app->bind(PayService::class, function ($app) {
-            return (new TinkoffDriver(config('payment.tinkoff', [])))->setTransport(
+            return (new TinkoffDriver(config('payment.tinkoff', [])))->setTinkoffProtocol(
                 new TinkoffProtocol(config('payment.tinkoff.merchantId', ''), config('payment.tinkoff.secretKey', ''), config('payment.tinkoff.apiUrl', ''))
             );
         });
         $this->app->bind(TinkoffDriver::class, function ($app) {
-            return (new TinkoffDriver(config('payment.tinkoff', [])))->setTransport(
+            return (new TinkoffDriver(config('payment.tinkoff', [])))->setTinkoffProtocol(
                 new TinkoffProtocol(config('payment.tinkoff.merchantId', ''), config('payment.tinkoff.secretKey', ''), config('payment.tinkoff.apiUrl', ''))
             );
         });
         $this->app->bind('\professionalweb\payment\Tinkoff', function ($app) {
-            return (new TinkoffDriver(config('payment.tinkoff', [])))->setTransport(
+            return (new TinkoffDriver(config('payment.tinkoff', [])))->setTinkoffProtocol(
                 new TinkoffProtocol(config('payment.tinkoff.merchantId', ''), config('payment.tinkoff.secretKey', ''), config('payment.tinkoff.apiUrl', ''))
             );
         });

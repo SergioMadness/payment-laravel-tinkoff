@@ -9,6 +9,7 @@ use professionalweb\payment\contracts\Receipt;
 use professionalweb\payment\contracts\PayService;
 use professionalweb\payment\contracts\PayProtocol;
 use professionalweb\payment\contracts\Form as IForm;
+use professionalweb\payment\interfaces\TinkoffProtocol;
 use professionalweb\payment\models\PayServiceOption;
 use professionalweb\payment\interfaces\TinkoffService;
 use professionalweb\payment\contracts\recurring\RecurringPayment;
@@ -25,6 +26,11 @@ class TinkoffDriver implements PayService, TinkoffService, RecurringPayment
      * @var PayProtocol
      */
     private $transport;
+
+    /**
+     * @var TinkoffProtocol
+     */
+    private $tinkoffProtocol;
 
     /**
      * Module config
@@ -488,14 +494,41 @@ class TinkoffDriver implements PayService, TinkoffService, RecurringPayment
      * Initialize recurring payment
      *
      * @param string $token
+     * @param string $accountId
+     * @param string $paymentId
      * @param float  $amount
      * @param string $description
      * @param string $currency
+     * @param array  $extraParams
      *
      * @return bool
      */
-    public function initPayment(string $token, float $amount, string $description, string $currency = PayService::CURRENCY_RUR_ISO): bool
+    public function initPayment(string $token, string $accountId, string $paymentId, float $amount, string $description, string $currency = PayService::CURRENCY_RUR_ISO, array $extraParams = []): bool
     {
-        // TODO: Implement initPayment() method.
+        $response = $this->getTinkoffProtocol()->paymentByToken([
+            'RebillId' => $token,
+        ]);
+
+        return ((int)$response['ErrorCode']) === 0;
+    }
+
+    /**
+     * @param TinkoffProtocol $protocol
+     *
+     * @return TinkoffService
+     */
+    public function setTinkoffProtocol(TinkoffProtocol $protocol): self
+    {
+        $this->tinkoffProtocol = $protocol;
+
+        return $this->setTransport($protocol);
+    }
+
+    /**
+     * @return TinkoffProtocol
+     */
+    public function getTinkoffProtocol(): TinkoffProtocol
+    {
+        return $this->tinkoffProtocol;
     }
 }

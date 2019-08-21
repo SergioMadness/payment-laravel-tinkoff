@@ -1,6 +1,7 @@
 <?php namespace professionalweb\payment\drivers\tinkoff;
 
 use professionalweb\payment\contracts\PayProtocol;
+use professionalweb\payment\interfaces\TinkoffProtocol as ITinkoffProtocol;
 
 require_once 'TinkoffMerchantAPI.php';
 
@@ -8,7 +9,7 @@ require_once 'TinkoffMerchantAPI.php';
  * Wrapper for Tinkoff protocol
  * @package professionalweb\payment\drivers\tinkoff
  */
-class TinkoffProtocol extends \TinkoffMerchantAPI implements PayProtocol
+class TinkoffProtocol extends \TinkoffMerchantAPI implements PayProtocol, ITinkoffProtocol
 {
 
     /**
@@ -97,5 +98,17 @@ class TinkoffProtocol extends \TinkoffMerchantAPI implements PayProtocol
     public function prepareParams(array $params): array
     {
         return $params;
+    }
+
+    /**
+     * Payment by card token
+     *
+     * @param array $data
+     *
+     * @return array
+     */
+    public function paymentByToken(array $data): array
+    {
+        return $this->charge($data);
     }
 }
