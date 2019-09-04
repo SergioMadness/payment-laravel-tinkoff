@@ -495,6 +495,7 @@ class TinkoffDriver implements PayService, TinkoffService, RecurringPayment
      *
      * @param string $token
      * @param string $paymentId
+     * @param string $orderId
      * @param float  $amount
      * @param string $description
      * @param string $currency
@@ -502,7 +503,7 @@ class TinkoffDriver implements PayService, TinkoffService, RecurringPayment
      *
      * @return bool
      */
-    public function initPayment(string $token, string $paymentId, float $amount, string $description, string $currency = PayService::CURRENCY_RUR_ISO, array $extraParams = []): bool
+    public function initPayment(string $token, string $orderId, string $paymentId, float $amount, string $description, string $currency = PayService::CURRENCY_RUR_ISO, array $extraParams = []): bool
     {
         $response = $this->getTinkoffProtocol()->paymentByToken([
             'RebillId' => $token,
