@@ -1,40 +1,42 @@
 <?php namespace professionalweb\payment\drivers\tinkoff;
 
+use professionalweb\payment\drivers\receipt\Receipt as IReceipt;
+
 /**
  * Receipt
  * @package professionalweb\payment\drivers\tinkoff
  */
-class Receipt extends \professionalweb\payment\drivers\receipt\Receipt
+class Receipt extends IReceipt
 {
     /**
      * общая СН
      */
-    const TAX_SYSTEM_COMMON = 'osn';
+    public const TAX_SYSTEM_COMMON = 'osn';
 
     /**
      * упрощенная СН (доходы)
      */
-    const TAX_SYSTEM_SIMPLE_INCOME = 'usn_income';
+    public const TAX_SYSTEM_SIMPLE_INCOME = 'usn_income';
 
     /**
      * упрощенная СН (доходы минус расходы)
      */
-    const TAX_SYSTEM_SIMPLE_NO_OUTCOME = 'usn_income_outcome';
+    public const TAX_SYSTEM_SIMPLE_NO_OUTCOME = 'usn_income_outcome';
 
     /**
      * единый налог на вмененный доход
      */
-    const TAX_SYSTEM_SIMPLE_UNIFIED = 'envd';
+    public const TAX_SYSTEM_SIMPLE_UNIFIED = 'envd';
 
     /**
      * единый сельскохозяйственный налог
      */
-    const TAX_SYSTEM_SIMPLE_AGRO = 'esn';
+    public const TAX_SYSTEM_SIMPLE_AGRO = 'esn';
 
     /**
      * патентная СН
      */
-    const TAX_SYSTEM_SIMPLE_PATENT = 'patent';
+    public const TAX_SYSTEM_SIMPLE_PATENT = 'patent';
 
     /**
      * Phone number
@@ -46,12 +48,12 @@ class Receipt extends \professionalweb\payment\drivers\receipt\Receipt
     /**
      * Receipt constructor.
      *
-     * @param string $phone
-     * @param string $email
+     * @param string     $phone
+     * @param string     $email
      * @param array|null $items
-     * @param int $taxSystem
+     * @param int        $taxSystem
      */
-    public function __construct($phone = null, $email = null, array $items = [], $taxSystem = null)
+    public function __construct(?string $phone = null, ?string $email = null, array $items = [], ?int $taxSystem = null)
     {
         parent::__construct($phone, $items, $taxSystem);
         $this->setEmail($email);
@@ -60,16 +62,17 @@ class Receipt extends \professionalweb\payment\drivers\receipt\Receipt
     /**
      * @return string
      */
-    public function getEmail()
+    public function getEmail(): string
     {
         return $this->email;
     }
 
     /**
      * @param $email
+     *
      * @return $this
      */
-    public function setEmail($email)
+    public function setEmail(?string $email): self
     {
         $this->email = $email;
 

@@ -7,7 +7,6 @@ use professionalweb\payment\interfaces\TinkoffService;
 use professionalweb\payment\drivers\tinkoff\TinkoffDriver;
 use professionalweb\payment\drivers\tinkoff\TinkoffProtocol;
 
-
 /**
  * Tinkoff payment provider
  * @package professionalweb\payment
@@ -15,9 +14,9 @@ use professionalweb\payment\drivers\tinkoff\TinkoffProtocol;
 class TinkoffProvider extends ServiceProvider
 {
 
-    public function boot()
+    public function boot(): void
     {
-        app(PaymentFacade::class)->registerDriver(TinkoffService::PAYMENT_TINKOFF, TinkoffService::class);
+        app(PaymentFacade::class)->registerDriver(TinkoffService::PAYMENT_TINKOFF, TinkoffService::class, TinkoffDriver::getOptions());
     }
 
 
@@ -26,26 +25,26 @@ class TinkoffProvider extends ServiceProvider
      *
      * @return void
      */
-    public function register()
+    public function register(): void
     {
         $this->app->bind(TinkoffService::class, function ($app) {
-            return (new TinkoffDriver(config('payment.tinkoff')))->setTransport(
-                new TinkoffProtocol(config('payment.tinkoff.merchantId'), config('payment.tinkoff.secretKey'), config('payment.tinkoff.apiUrl'))
+            return (new TinkoffDriver(config('payment.tinkoff', [])))->setTinkoffProtocol(
+                new TinkoffProtocol(config('payment.tinkoff.merchantId', ''), config('payment.tinkoff.secretKey', ''), config('payment.tinkoff.apiUrl', ''))
             );
         });
         $this->app->bind(PayService::class, function ($app) {
-            return (new TinkoffDriver(config('payment.tinkoff')))->setTransport(
-                new TinkoffProtocol(config('payment.tinkoff.merchantId'), config('payment.tinkoff.secretKey'), config('payment.tinkoff.apiUrl'))
+            return (new TinkoffDriver(config('payment.tinkoff', [])))->setTinkoffProtocol(
+                new TinkoffProtocol(config('payment.tinkoff.merchantId', ''), config('payment.tinkoff.secretKey', ''), config('payment.tinkoff.apiUrl', ''))
             );
         });
         $this->app->bind(TinkoffDriver::class, function ($app) {
-            return (new TinkoffDriver(config('payment.tinkoff')))->setTransport(
-                new TinkoffProtocol(config('payment.tinkoff.merchantId'), config('payment.tinkoff.secretKey'), config('payment.tinkoff.apiUrl'))
+            return (new TinkoffDriver(config('payment.tinkoff', [])))->setTinkoffProtocol(
+                new TinkoffProtocol(config('payment.tinkoff.merchantId', ''), config('payment.tinkoff.secretKey', ''), config('payment.tinkoff.apiUrl', ''))
             );
         });
         $this->app->bind('\professionalweb\payment\Tinkoff', function ($app) {
-            return (new TinkoffDriver(config('payment.tinkoff')))->setTransport(
-                new TinkoffProtocol(config('payment.tinkoff.merchantId'), config('payment.tinkoff.secretKey'), config('payment.tinkoff.apiUrl'))
+            return (new TinkoffDriver(config('payment.tinkoff', [])))->setTinkoffProtocol(
+                new TinkoffProtocol(config('payment.tinkoff.merchantId', ''), config('payment.tinkoff.secretKey', ''), config('payment.tinkoff.apiUrl', ''))
             );
         });
     }

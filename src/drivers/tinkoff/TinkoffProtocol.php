@@ -1,6 +1,7 @@
 <?php namespace professionalweb\payment\drivers\tinkoff;
 
 use professionalweb\payment\contracts\PayProtocol;
+use professionalweb\payment\interfaces\TinkoffProtocol as ITinkoffProtocol;
 
 require_once 'TinkoffMerchantAPI.php';
 
@@ -8,7 +9,7 @@ require_once 'TinkoffMerchantAPI.php';
  * Wrapper for Tinkoff protocol
  * @package professionalweb\payment\drivers\tinkoff
  */
-class TinkoffProtocol extends \TinkoffMerchantAPI implements PayProtocol
+class TinkoffProtocol extends \TinkoffMerchantAPI implements PayProtocol, ITinkoffProtocol
 {
 
     /**
@@ -19,10 +20,10 @@ class TinkoffProtocol extends \TinkoffMerchantAPI implements PayProtocol
      * @return string
      * @throws \Exception
      */
-    public function getPaymentUrl($params)
+    public function getPaymentUrl(array $params): string
     {
         $this->init($params);
-        if ($this->error != '') {
+        if ($this->error !== '') {
             throw new \Exception($this->error);
         }
 
@@ -36,14 +37,14 @@ class TinkoffProtocol extends \TinkoffMerchantAPI implements PayProtocol
      *
      * @return bool
      */
-    public function validate($params)
+    public function validate(array $params): bool
     {
         $result = false;
 
         if (isset($params['Token'])) {
             $token = $params['Token'];
             unset($params['Token']);
-            if ($token != '' && $this->genToken($params) == $token) {
+            if ($token !== '' && $this->genToken($params) === $token) {
                 $result = true;
             }
         }
@@ -54,9 +55,9 @@ class TinkoffProtocol extends \TinkoffMerchantAPI implements PayProtocol
     /**
      * Get payment ID
      *
-     * @return mixed
+     * @return string
      */
-    public function getPaymentId()
+    public function getPaymentId(): string
     {
         return $this->paymentId;
     }
@@ -69,9 +70,9 @@ class TinkoffProtocol extends \TinkoffMerchantAPI implements PayProtocol
      *
      * @return string
      */
-    public function getNotificationResponse($requestData, $errorCode)
+    public function getNotificationResponse($requestData, $errorCode): string
     {
-        return $errorCode > 0 ? response('ERROR') : response('OK');
+        return $errorCode > 0 ? 'ERROR' : 'OK';
     }
 
     /**
@@ -82,8 +83,32 @@ class TinkoffProtocol extends \TinkoffMerchantAPI implements PayProtocol
      *
      * @return string
      */
-    public function getCheckResponse($requestData, $errorCode)
+    public function getCheckResponse($requestData, $errorCode): string
     {
-        return $errorCode > 0 ? response('ERROR') : response('OK');
+        return $errorCode > 0 ? 'ERROR' : 'OK';
+    }
+
+    /**
+     * Prepare parameters
+     *
+     * @param array $params
+     *
+     * @return array
+     */
+    public function prepareParams(array $params): array
+    {
+        return $params;
+    }
+
+    /**
+     * Payment by card token
+     *
+     * @param array $data
+     *
+     * @return array
+     */
+    public function paymentByToken(array $data): array
+    {
+        return $this->charge($data);
     }
 }

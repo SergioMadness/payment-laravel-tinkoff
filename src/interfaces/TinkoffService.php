@@ -2,5 +2,5 @@
 
 interface TinkoffService
 {
-    const PAYMENT_TINKOFF = 'tinkoff';
+    public const PAYMENT_TINKOFF = 'tinkoff';
 }
