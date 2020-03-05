@@ -46,9 +46,6 @@
       "providers": [
         "professionalweb\\payment\\TinkoffProvider"
       ]
-    },
-    "branch-alias": {
-      "dev-improvement/improve-interface": "1.1.x-dev"
     }
   }
 }
