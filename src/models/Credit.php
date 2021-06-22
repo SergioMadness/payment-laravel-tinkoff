@@ -1,10 +1,10 @@
-<?php namespace professionalweb\payment\model;
+<?php namespace professionalweb\payment\models;
 
 use professionalweb\payment\interfaces\models\Credit as ICredit;
 
 /**
  * Credit model
- * @package professionalweb\payment\model
+ * @package professionalweb\payment\models
  */
 class Credit implements ICredit
 {

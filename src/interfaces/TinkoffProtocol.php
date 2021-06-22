@@ -1,6 +1,7 @@
 <?php namespace professionalweb\payment\interfaces;
 
 use professionalweb\payment\contracts\PayProtocol;
+use professionalweb\payment\interfaces\models\Credit;
 
 /**
  * Interface for Tinkoff protocol
@@ -23,7 +24,7 @@ interface TinkoffProtocol extends PayProtocol
      * @param array $data
      * @param bool  $isDemo
      *
-     * @return mixed
+     * @return Credit
      */
-    public function createCredit(array $data, bool $isDemo = false);
+    public function createCredit(array $data, bool $isDemo = false): Credit;
 }

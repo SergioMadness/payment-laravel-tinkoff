@@ -1,7 +1,8 @@
 <?php namespace professionalweb\payment\drivers\tinkoff;
 
-use professionalweb\payment\model\Credit;
+use professionalweb\payment\models\Credit;
 use professionalweb\payment\contracts\PayProtocol;
+use professionalweb\payment\interfaces\models\Credit as ICredit;
 use professionalweb\payment\interfaces\TinkoffProtocol as ITinkoffProtocol;
 
 require_once 'TinkoffMerchantAPI.php';
@@ -12,6 +13,19 @@ require_once 'TinkoffMerchantAPI.php';
  */
 class TinkoffProtocol extends \TinkoffMerchantAPI implements PayProtocol, ITinkoffProtocol
 {
+    /** @var string */
+    private $terminalKey;
+
+    /** @var string */
+    private $secretKey;
+
+    public function __construct($terminalKey, $secretKey, $api_url)
+    {
+        parent::__construct($terminalKey, $secretKey, $api_url);
+
+        $this->terminalKey = $terminalKey;
+        $this->secretKey = $secretKey;
+    }
 
     /**
      * Get payment URL
@@ -119,12 +133,15 @@ class TinkoffProtocol extends \TinkoffMerchantAPI implements PayProtocol, ITinko
      * @param array $data
      * @param bool  $isDemo
      *
-     * @return mixed
+     * @return ICredit
      * @throws \Exception
      */
-    public function createCredit(array $data, bool $isDemo = false)
+    public function createCredit(array $data, bool $isDemo = false): ICredit
     {
         $url = $isDemo ? 'https://forma.tinkoff.ru/api/partners/v2/orders/create-demo' : 'https://forma.tinkoff.ru/api/partners/v2/orders/create';
+
+        $data['shopId'] = $this->terminalKey;
+        $data['showcaseId'] = $this->secretKey;
 
         $result = $this->sendRequest($url, $data);
 

@@ -38,11 +38,11 @@ class TinkoffProvider extends ServiceProvider
             );
         });
         $this->app->bind(TinkoffCreditService::class, function ($app) {
-            return (new TinkoffCreditDriver(config('payment.tinkoff', [])))->setTinkoffProtocol(
+            return (new TinkoffCreditDriver(config('payment.tinkoff-credit', [])))->setTinkoffProtocol(
                 new TinkoffProtocol(
-                    config('payment.tinkoff.merchantId', ''),
-                    config('payment.tinkoff.secretKey', ''),
-                    config('payment.tinkoff.apiUrl', '')
+                    config('payment.tinkoff-credit.merchantId', ''),
+                    config('payment.tinkoff-credit.secretKey', ''),
+                    config('payment.tinkoff-credit.apiUrl', '')
                 )
             );
         });

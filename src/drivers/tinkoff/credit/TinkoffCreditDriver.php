@@ -2,6 +2,7 @@
 
 use Illuminate\Http\Response;
 use professionalweb\payment\contracts\Form;
+use professionalweb\payment\Form as FormModel;
 use professionalweb\payment\contracts\Receipt;
 use professionalweb\payment\contracts\PayService;
 use professionalweb\payment\contracts\PayProtocol;
@@ -60,7 +61,7 @@ class TinkoffCreditDriver implements PayService, TinkoffCreditService
     {
         $result = $this->getTinkoffProtocol()->createCredit([
             'sum'         => $amount,
-            'items'       => $extraParams['products'],
+            'items'       => $extraParams['products'] ?? [],
             'orderNumber' => $orderId,
             'failURL'     => $failReturnUrl,
             'successURL'  => $successReturnUrl,
@@ -68,17 +69,17 @@ class TinkoffCreditDriver implements PayService, TinkoffCreditService
             'values'      => [
                 'contact' => [
                     'fio'         => [
-                        'lastName'   => $extraParams['lastName'],
-                        'firstName'  => $extraParams['firstName'],
-                        'middleName' => $extraParams['middleName'],
+                        'lastName'   => $extraParams['lastName'] ?? '',
+                        'firstName'  => $extraParams['firstName'] ?? '',
+                        'middleName' => $extraParams['middleName'] ?? '',
                     ],
-                    'mobilePhone' => $extraParams['phone'],
-                    'email'       => $extraParams['email'],
+                    'mobilePhone' => $extraParams['phone'] ?? '',
+                    'email'       => $extraParams['email'] ?? '',
                 ],
             ],
-        ]);
+        ], config('payment.tinkoff-credit.isDemo', false));
 
-        return $result['link'] ?? $failReturnUrl;
+        return $result->getLink() ?? $failReturnUrl;
     }
 
     /**
@@ -113,7 +114,7 @@ class TinkoffCreditDriver implements PayService, TinkoffCreditService
                                    string $failReturnUrl = '', string $description = '', array $extraParams = [],
                                    Receipt $receipt = null): Form
     {
-        return new Form();
+        return new FormModel();
     }
 
     /**
