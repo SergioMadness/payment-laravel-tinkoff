@@ -6,6 +6,8 @@ use professionalweb\payment\contracts\PaymentFacade;
 use professionalweb\payment\interfaces\TinkoffService;
 use professionalweb\payment\drivers\tinkoff\TinkoffDriver;
 use professionalweb\payment\drivers\tinkoff\TinkoffProtocol;
+use professionalweb\payment\interfaces\TinkoffCreditService;
+use professionalweb\payment\drivers\tinkoff\credit\TinkoffCreditDriver;
 
 /**
  * Tinkoff payment provider
@@ -16,7 +18,10 @@ class TinkoffProvider extends ServiceProvider
 
     public function boot(): void
     {
-        app(PaymentFacade::class)->registerDriver(TinkoffService::PAYMENT_TINKOFF, TinkoffService::class, TinkoffDriver::getOptions());
+        /** @var PaymentFacade $facade */
+        $facade = app(PaymentFacade::class);
+        $facade->registerDriver(TinkoffService::PAYMENT_TINKOFF, TinkoffService::class, TinkoffDriver::getOptions());
+        $facade->registerDriver(TinkoffCreditService::PAYMENT_TINKOFF_CREDIT, TinkoffCreditService::class, TinkoffCreditDriver::getOptions());
     }
 
 
@@ -30,6 +35,15 @@ class TinkoffProvider extends ServiceProvider
         $this->app->bind(TinkoffService::class, function ($app) {
             return (new TinkoffDriver(config('payment.tinkoff', [])))->setTinkoffProtocol(
                 new TinkoffProtocol(config('payment.tinkoff.merchantId', ''), config('payment.tinkoff.secretKey', ''), config('payment.tinkoff.apiUrl', ''))
+            );
+        });
+        $this->app->bind(TinkoffCreditService::class, function ($app) {
+            return (new TinkoffCreditDriver(config('payment.tinkoff', [])))->setTinkoffProtocol(
+                new TinkoffProtocol(
+                    config('payment.tinkoff.merchantId', ''),
+                    config('payment.tinkoff.secretKey', ''),
+                    config('payment.tinkoff.apiUrl', '')
+                )
             );
         });
         $this->app->bind(PayService::class, function ($app) {

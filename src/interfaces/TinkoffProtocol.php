@@ -16,4 +16,14 @@ interface TinkoffProtocol extends PayProtocol
      * @return array
      */
     public function paymentByToken(array $data): array;
+
+    /**
+     * Create credit request
+     *
+     * @param array $data
+     * @param bool  $isDemo
+     *
+     * @return mixed
+     */
+    public function createCredit(array $data, bool $isDemo = false);
 }

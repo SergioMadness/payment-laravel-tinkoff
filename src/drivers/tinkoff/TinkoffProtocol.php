@@ -1,5 +1,6 @@
 <?php namespace professionalweb\payment\drivers\tinkoff;
 
+use professionalweb\payment\model\Credit;
 use professionalweb\payment\contracts\PayProtocol;
 use professionalweb\payment\interfaces\TinkoffProtocol as ITinkoffProtocol;
 
@@ -110,5 +111,53 @@ class TinkoffProtocol extends \TinkoffMerchantAPI implements PayProtocol, ITinko
     public function paymentByToken(array $data): array
     {
         return $this->charge($data);
+    }
+
+    /**
+     * Create credit request
+     *
+     * @param array $data
+     * @param bool  $isDemo
+     *
+     * @return mixed
+     * @throws \Exception
+     */
+    public function createCredit(array $data, bool $isDemo = false)
+    {
+        $url = $isDemo ? 'https://forma.tinkoff.ru/api/partners/v2/orders/create-demo' : 'https://forma.tinkoff.ru/api/partners/v2/orders/create';
+
+        $result = $this->sendRequest($url, $data);
+
+        return new Credit($result['id'], $result['link']);
+    }
+
+    /**
+     * Send request to cloudpayments
+     *
+     * @param string $url
+     * @param array  $params
+     *
+     * @return array
+     * @throws \Exception
+     */
+    protected function sendRequest(string $url, array $params = []): array
+    {
+        $curl = curl_init($url);
+        curl_setopt($curl, CURLOPT_HTTPHEADER, ['Content-Type: application/json']);
+//        curl_setopt($curl, CURLOPT_USERPWD, sprintf('%s:%s', $this->getPublicKey(), $this->getPrivateKey()));
+        curl_setopt($curl, CURLOPT_TIMEOUT, 20);
+        curl_setopt($curl, CURLOPT_RETURNTRANSFER, true);
+        curl_setopt($curl, CURLOPT_FOLLOWLOCATION, true);
+        curl_setopt($curl, CURLOPT_POST, 1);
+        curl_setopt($curl, CURLOPT_POSTFIELDS, json_encode($params));
+
+        $body = curl_exec($curl);
+
+        $curlStatus = curl_getinfo($curl, CURLINFO_HTTP_CODE);
+        if ($curlStatus >= 400) {
+            throw new \Exception($body);
+        }
+
+        return json_decode($body, true);
     }
 }
