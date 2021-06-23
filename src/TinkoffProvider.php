@@ -42,7 +42,9 @@ class TinkoffProvider extends ServiceProvider
                 new TinkoffProtocol(
                     config('payment.tinkoff-credit.merchantId', ''),
                     config('payment.tinkoff-credit.secretKey', ''),
-                    config('payment.tinkoff-credit.apiUrl', '')
+                    config('payment.tinkoff-credit.apiUrl', ''),
+                    config('payment.tinkoff-credit.basicAuthLogin', ''),
+                    config('payment.tinkoff-credit.basicAuthPassword', '')
                 )
             );
         });

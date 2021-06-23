@@ -19,12 +19,20 @@ class TinkoffProtocol extends \TinkoffMerchantAPI implements PayProtocol, ITinko
     /** @var string */
     private $secretKey;
 
-    public function __construct($terminalKey, $secretKey, $api_url)
+    /** @var string */
+    private $authBasicLogin;
+
+    /** @var string */
+    private $authBasicPassword;
+
+    public function __construct($terminalKey, $secretKey, $api_url, $authBasicLogin = '', $authBasicPassword = '')
     {
         parent::__construct($terminalKey, $secretKey, $api_url);
 
         $this->terminalKey = $terminalKey;
         $this->secretKey = $secretKey;
+        $this->authBasicLogin = $authBasicLogin;
+        $this->authBasicPassword = $authBasicPassword;
     }
 
     /**
@@ -249,7 +257,9 @@ class TinkoffProtocol extends \TinkoffMerchantAPI implements PayProtocol, ITinko
     {
         $curl = curl_init($url);
         curl_setopt($curl, CURLOPT_HTTPHEADER, ['Content-Type: application/json']);
-//        curl_setopt($curl, CURLOPT_USERPWD, sprintf('%s:%s', $this->getPublicKey(), $this->getPrivateKey()));
+        if (!empty($this->authBasicLogin)) {
+            curl_setopt($curl, CURLOPT_USERPWD, sprintf('%s:%s', $this->authBasicLogin, $this->authBasicPassword));
+        }
         curl_setopt($curl, CURLOPT_TIMEOUT, 20);
         curl_setopt($curl, CURLOPT_RETURNTRANSFER, true);
         curl_setopt($curl, CURLOPT_FOLLOWLOCATION, true);
