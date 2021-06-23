@@ -27,4 +27,31 @@ interface TinkoffProtocol extends PayProtocol
      * @return Credit
      */
     public function createCredit(array $data, bool $isDemo = false): Credit;
+
+    /**
+     * Get credit info
+     *
+     * @param string $id
+     *
+     * @return Credit
+     */
+    public function getCreditInfo(string $id): Credit;
+
+    /**
+     * Commit credit
+     *
+     * @param string $id
+     *
+     * @return Credit
+     */
+    public function commitCredit(string $id): Credit;
+
+    /**
+     * Cancel request
+     *
+     * @param string $id
+     *
+     * @return Credit
+     */
+    public function cancelCredit(string $id): Credit;
 }

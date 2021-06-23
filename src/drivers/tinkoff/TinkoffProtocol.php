@@ -143,21 +143,109 @@ class TinkoffProtocol extends \TinkoffMerchantAPI implements PayProtocol, ITinko
         $data['shopId'] = $this->terminalKey;
         $data['showcaseId'] = $this->secretKey;
 
-        $result = $this->sendRequest($url, $data);
+        $result = $this->sendRequest('post', $url, $data);
 
         return new Credit($result['id'], $result['link']);
     }
 
     /**
+     * Get credit info
+     *
+     * @param string $id
+     *
+     * @return ICredit
+     * @throws \Exception
+     */
+    public function getCreditInfo(string $id): ICredit
+    {
+        $result = $this->sendRequest('get', 'https://forma.tinkoff.ru/api/partners/v2/orders/' . $id . '/info');
+
+        return (new Credit($result['id'], $result['link']))
+            ->setCreatedAt(new \DateTime($result['created_at']))
+            ->setIsCommitted($result['committed'])
+            ->setFirstPayment($result['first_payment'])
+            ->setOrderAmount($result['order_amount'])
+            ->setCreditAmount($result['credit_amount'])
+            ->setCreditType($result['product'])
+            ->setMonthQty($result['term'])
+            ->setMonthlyPayment($result['monthly_payment'])
+            ->setFirstName($result['first_name'])
+            ->setMiddleName($result['middle_name'])
+            ->setLastName($result['last_name'])
+            ->setPhone($result['phone'])
+            ->setEmail($result['email'])
+            ->setLoanNumber($result['loan_number']);
+    }
+
+    /**
+     * Commit credit
+     *
+     * @param string $id
+     *
+     * @return ICredit
+     * @throws \Exception
+     */
+    public function commitCredit(string $id): ICredit
+    {
+        $result = $this->sendRequest('post', 'https://forma.tinkoff.ru/api/partners/v2/orders/' . $id . '/commit');
+
+        return (new Credit($result['id'], $result['link']))
+            ->setCreatedAt(new \DateTime($result['created_at']))
+            ->setIsCommitted($result['committed'])
+            ->setFirstPayment($result['first_payment'])
+            ->setOrderAmount($result['order_amount'])
+            ->setCreditAmount($result['credit_amount'])
+            ->setCreditType($result['product'])
+            ->setMonthQty($result['term'])
+            ->setMonthlyPayment($result['monthly_payment'])
+            ->setFirstName($result['first_name'])
+            ->setMiddleName($result['middle_name'])
+            ->setLastName($result['last_name'])
+            ->setPhone($result['phone'])
+            ->setEmail($result['email'])
+            ->setLoanNumber($result['loan_number']);
+    }
+
+    /**
+     * Cancel request
+     *
+     * @param string $id
+     *
+     * @return ICredit
+     * @throws \Exception
+     */
+    public function cancelCredit(string $id): ICredit
+    {
+        $result = $this->sendRequest('post', 'https://forma.tinkoff.ru/api/partners/v2/orders/' . $id . '/cancel');
+
+        return (new Credit($result['id'], $result['link']))
+            ->setCreatedAt(new \DateTime($result['created_at']))
+            ->setIsCommitted($result['committed'])
+            ->setFirstPayment($result['first_payment'])
+            ->setOrderAmount($result['order_amount'])
+            ->setCreditAmount($result['credit_amount'])
+            ->setCreditType($result['product'])
+            ->setMonthQty($result['term'])
+            ->setMonthlyPayment($result['monthly_payment'])
+            ->setFirstName($result['first_name'])
+            ->setMiddleName($result['middle_name'])
+            ->setLastName($result['last_name'])
+            ->setPhone($result['phone'])
+            ->setEmail($result['email'])
+            ->setLoanNumber($result['loan_number']);
+    }
+
+    /**
      * Send request to cloudpayments
      *
+     * @param string $method
      * @param string $url
      * @param array  $params
      *
      * @return array
      * @throws \Exception
      */
-    protected function sendRequest(string $url, array $params = []): array
+    protected function sendRequest(string $method, string $url, array $params = []): array
     {
         $curl = curl_init($url);
         curl_setopt($curl, CURLOPT_HTTPHEADER, ['Content-Type: application/json']);
@@ -165,8 +253,10 @@ class TinkoffProtocol extends \TinkoffMerchantAPI implements PayProtocol, ITinko
         curl_setopt($curl, CURLOPT_TIMEOUT, 20);
         curl_setopt($curl, CURLOPT_RETURNTRANSFER, true);
         curl_setopt($curl, CURLOPT_FOLLOWLOCATION, true);
-        curl_setopt($curl, CURLOPT_POST, 1);
-        curl_setopt($curl, CURLOPT_POSTFIELDS, json_encode($params));
+        if ($method === 'post') {
+            curl_setopt($curl, CURLOPT_POST, 1);
+            curl_setopt($curl, CURLOPT_POSTFIELDS, json_encode($params));
+        }
 
         $body = curl_exec($curl);
 

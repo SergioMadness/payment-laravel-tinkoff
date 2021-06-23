@@ -1,5 +1,6 @@
 <?php namespace professionalweb\payment\drivers\tinkoff\credit;
 
+use Illuminate\Support\Arr;
 use Illuminate\Http\Response;
 use professionalweb\payment\contracts\Form;
 use professionalweb\payment\Form as FormModel;
@@ -7,6 +8,7 @@ use professionalweb\payment\contracts\Receipt;
 use professionalweb\payment\contracts\PayService;
 use professionalweb\payment\contracts\PayProtocol;
 use professionalweb\payment\models\PayServiceOption;
+use professionalweb\payment\contracts\PaymentApprove;
 use professionalweb\payment\interfaces\TinkoffProtocol;
 use professionalweb\payment\interfaces\TinkoffCreditService;
 
@@ -14,7 +16,7 @@ use professionalweb\payment\interfaces\TinkoffCreditService;
  * Driver to work with credits
  * @package professionalweb\payment\drivers\tinkoff\credit
  */
-class TinkoffCreditDriver implements PayService, TinkoffCreditService
+class TinkoffCreditDriver implements PayService, TinkoffCreditService, PaymentApprove
 {
     /**
      * @var TinkoffProtocol
@@ -27,6 +29,9 @@ class TinkoffCreditDriver implements PayService, TinkoffCreditService
      * @var PayProtocol
      */
     private $transport;
+
+    /** @var array */
+    private $response;
 
     /**
      * Get name of payment service
@@ -126,7 +131,7 @@ class TinkoffCreditDriver implements PayService, TinkoffCreditService
      */
     public function validate(array $data): bool
     {
-        // TODO: Implement validate() method.
+        return $this->getTransport()->validate($data);
     }
 
     /**
@@ -138,7 +143,9 @@ class TinkoffCreditDriver implements PayService, TinkoffCreditService
      */
     public function setResponse(array $data): PayService
     {
-        // TODO: Implement setResponse() method.
+        $this->response = $data;
+
+        return $this;
     }
 
     /**
@@ -148,7 +155,7 @@ class TinkoffCreditDriver implements PayService, TinkoffCreditService
      */
     public function getOrderId(): string
     {
-        // TODO: Implement getOrderId() method.
+        return $this->getParam('id');
     }
 
     /**
@@ -158,7 +165,7 @@ class TinkoffCreditDriver implements PayService, TinkoffCreditService
      */
     public function getPaymentId(): string
     {
-        // TODO: Implement getPaymentId() method.
+        return $this->getParam('id');
     }
 
     /**
@@ -168,7 +175,7 @@ class TinkoffCreditDriver implements PayService, TinkoffCreditService
      */
     public function getStatus(): string
     {
-        // TODO: Implement getStatus() method.
+        return $this->getParam('status');
     }
 
     /**
@@ -178,7 +185,7 @@ class TinkoffCreditDriver implements PayService, TinkoffCreditService
      */
     public function isSuccess(): bool
     {
-        // TODO: Implement isSuccess() method.
+        return $this->getParam('status') === 'approved';
     }
 
     /**
@@ -188,7 +195,7 @@ class TinkoffCreditDriver implements PayService, TinkoffCreditService
      */
     public function getTransactionId(): string
     {
-        // TODO: Implement getTransactionId() method.
+        return $this->getParam('id');
     }
 
     /**
@@ -198,7 +205,7 @@ class TinkoffCreditDriver implements PayService, TinkoffCreditService
      */
     public function getAmount(): float
     {
-        // TODO: Implement getAmount() method.
+        return $this->getParam('credit_amount');
     }
 
     /**
@@ -208,7 +215,7 @@ class TinkoffCreditDriver implements PayService, TinkoffCreditService
      */
     public function getErrorCode(): string
     {
-        // TODO: Implement getErrorCode() method.
+        return '';
     }
 
     /**
@@ -218,7 +225,7 @@ class TinkoffCreditDriver implements PayService, TinkoffCreditService
      */
     public function getProvider(): string
     {
-        // TODO: Implement getProvider() method.
+        return self::PAYMENT_TINKOFF_CREDIT;
     }
 
     /**
@@ -228,7 +235,7 @@ class TinkoffCreditDriver implements PayService, TinkoffCreditService
      */
     public function getPan(): string
     {
-        // TODO: Implement getPan() method.
+        return '';
     }
 
     /**
@@ -238,7 +245,7 @@ class TinkoffCreditDriver implements PayService, TinkoffCreditService
      */
     public function getDateTime(): string
     {
-        // TODO: Implement getDateTime() method.
+        return $this->getParam('created_at');
     }
 
     /**
@@ -248,7 +255,7 @@ class TinkoffCreditDriver implements PayService, TinkoffCreditService
      */
     public function getCurrency(): string
     {
-        // TODO: Implement getCurrency() method.
+        return self::CURRENCY_RUR;
     }
 
     /**
@@ -258,7 +265,7 @@ class TinkoffCreditDriver implements PayService, TinkoffCreditService
      */
     public function getCardType(): string
     {
-        // TODO: Implement getCardType() method.
+        return '';
     }
 
     /**
@@ -268,7 +275,7 @@ class TinkoffCreditDriver implements PayService, TinkoffCreditService
      */
     public function getCardExpDate(): string
     {
-        // TODO: Implement getCardExpDate() method.
+        return '';
     }
 
     /**
@@ -278,7 +285,7 @@ class TinkoffCreditDriver implements PayService, TinkoffCreditService
      */
     public function getCardUserName(): string
     {
-        // TODO: Implement getCardUserName() method.
+        return '';
     }
 
     /**
@@ -288,7 +295,7 @@ class TinkoffCreditDriver implements PayService, TinkoffCreditService
      */
     public function getIssuer(): string
     {
-        // TODO: Implement getIssuer() method.
+        return '';
     }
 
     /**
@@ -298,7 +305,7 @@ class TinkoffCreditDriver implements PayService, TinkoffCreditService
      */
     public function getEmail(): string
     {
-        // TODO: Implement getEmail() method.
+        return '';
     }
 
     /**
@@ -308,7 +315,7 @@ class TinkoffCreditDriver implements PayService, TinkoffCreditService
      */
     public function getPaymentType(): string
     {
-        // TODO: Implement getPaymentType() method.
+        return '';
     }
 
     /**
@@ -344,7 +351,7 @@ class TinkoffCreditDriver implements PayService, TinkoffCreditService
      */
     public function getNotificationResponse(int $errorCode = null): Response
     {
-        // TODO: Implement getNotificationResponse() method.
+        return \response('');
     }
 
     /**
@@ -356,7 +363,7 @@ class TinkoffCreditDriver implements PayService, TinkoffCreditService
      */
     public function getCheckResponse(int $errorCode = null): Response
     {
-        // TODO: Implement getCheckResponse() method.
+        return \response('');
     }
 
     /**
@@ -366,7 +373,7 @@ class TinkoffCreditDriver implements PayService, TinkoffCreditService
      */
     public function getLastError(): int
     {
-        // TODO: Implement getLastError() method.
+        return 0;
     }
 
     /**
@@ -378,7 +385,7 @@ class TinkoffCreditDriver implements PayService, TinkoffCreditService
      */
     public function getParam(string $name)
     {
-        // TODO: Implement getParam() method.
+        return Arr::get($this->response, $name, '');
     }
 
     /**
@@ -414,5 +421,33 @@ class TinkoffCreditDriver implements PayService, TinkoffCreditService
     public function getTinkoffProtocol(): TinkoffProtocol
     {
         return $this->tinkoffCreditProtocol;
+    }
+
+    /**
+     * Approve transaction by id
+     *
+     * @param string $id
+     *
+     * @return bool
+     */
+    public function approveTransaction($id): bool
+    {
+        $this->getTinkoffProtocol()->commitCredit($id);
+
+        return true;
+    }
+
+    /**
+     * Get transaction status
+     *
+     * @param string $id
+     *
+     * @return string
+     */
+    public function getTransactionStatus($id): string
+    {
+        $credit = $this->getTinkoffProtocol()->getCreditInfo($id);
+
+        return $credit->getStatus();
     }
 }
