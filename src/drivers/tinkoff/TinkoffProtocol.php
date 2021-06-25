@@ -168,21 +168,22 @@ class TinkoffProtocol extends \TinkoffMerchantAPI implements PayProtocol, ITinko
     {
         $result = $this->sendRequest('get', 'https://forma.tinkoff.ru/api/partners/v2/orders/' . $id . '/info');
 
-        return (new Credit($result['id'], $result['link'] ?? ''))
-            ->setCreatedAt(new \DateTime($result['created_at']))
-            ->setIsCommitted($result['committed'])
-            ->setFirstPayment($result['first_payment'])
-            ->setOrderAmount($result['order_amount'])
-            ->setCreditAmount($result['credit_amount'])
-            ->setCreditType($result['product'])
-            ->setMonthQty($result['term'])
-            ->setMonthlyPayment($result['monthly_payment'])
-            ->setFirstName($result['first_name'])
-            ->setMiddleName($result['middle_name'])
-            ->setLastName($result['last_name'])
-            ->setPhone($result['phone'])
-            ->setEmail($result['email'])
-            ->setLoanNumber($result['loan_number']);
+        return (new Credit($result['id'] ?? '', $result['link'] ?? ''))
+            ->setCreatedAt(new \DateTime($result['created_at'] ?? ''))
+            ->setIsCommitted($result['committed'] ?? false)
+            ->setFirstPayment($result['first_payment'] ?? 0)
+            ->setOrderAmount($result['order_amount'] ?? 0)
+            ->setCreditAmount($result['credit_amount'] ?? 0)
+            ->setCreditType($result['product'] ?? '')
+            ->setMonthQty($result['term'] ?? 0)
+            ->setMonthlyPayment($result['monthly_payment'] ?? 0)
+            ->setFirstName($result['first_name'] ?? '')
+            ->setMiddleName($result['middle_name'] ?? '')
+            ->setLastName($result['last_name'] ?? '')
+            ->setPhone($result['phone'] ?? '')
+            ->setEmail($result['email'] ?? '')
+            ->setStatus($result['status'] ?? '')
+            ->setLoanNumber($result['loan_number'] ?? '');
     }
 
     /**
@@ -197,21 +198,22 @@ class TinkoffProtocol extends \TinkoffMerchantAPI implements PayProtocol, ITinko
     {
         $result = $this->sendRequest('post', 'https://forma.tinkoff.ru/api/partners/v2/orders/' . $id . '/commit');
 
-        return (new Credit($result['id'], $result['link'] ?? ''))
-            ->setCreatedAt(new \DateTime($result['created_at']))
-            ->setIsCommitted($result['committed'])
-            ->setFirstPayment($result['first_payment'])
-            ->setOrderAmount($result['order_amount'])
-            ->setCreditAmount($result['credit_amount'])
-            ->setCreditType($result['product'])
-            ->setMonthQty($result['term'])
-            ->setMonthlyPayment($result['monthly_payment'])
-            ->setFirstName($result['first_name'])
-            ->setMiddleName($result['middle_name'])
-            ->setLastName($result['last_name'])
-            ->setPhone($result['phone'])
-            ->setEmail($result['email'])
-            ->setLoanNumber($result['loan_number']);
+        return (new Credit($result['id'] ?? '', $result['link'] ?? ''))
+            ->setCreatedAt(new \DateTime($result['created_at'] ?? ''))
+            ->setIsCommitted($result['committed'] ?? false)
+            ->setFirstPayment($result['first_payment'] ?? 0)
+            ->setOrderAmount($result['order_amount'] ?? 0)
+            ->setCreditAmount($result['credit_amount'] ?? 0)
+            ->setCreditType($result['product'] ?? '')
+            ->setMonthQty($result['term'] ?? 0)
+            ->setMonthlyPayment($result['monthly_payment'] ?? 0)
+            ->setFirstName($result['first_name'] ?? '')
+            ->setMiddleName($result['middle_name'] ?? '')
+            ->setLastName($result['last_name'] ?? '')
+            ->setPhone($result['phone'] ?? '')
+            ->setEmail($result['email'] ?? '')
+            ->setStatus($result['status'] ?? '')
+            ->setLoanNumber($result['loan_number'] ?? '');
     }
 
     /**
@@ -226,21 +228,22 @@ class TinkoffProtocol extends \TinkoffMerchantAPI implements PayProtocol, ITinko
     {
         $result = $this->sendRequest('post', 'https://forma.tinkoff.ru/api/partners/v2/orders/' . $id . '/cancel');
 
-        return (new Credit($result['id'], $result['link'] ?? ''))
-            ->setCreatedAt(new \DateTime($result['created_at']))
-            ->setIsCommitted($result['committed'])
-            ->setFirstPayment($result['first_payment'])
-            ->setOrderAmount($result['order_amount'])
-            ->setCreditAmount($result['credit_amount'])
-            ->setCreditType($result['product'])
-            ->setMonthQty($result['term'])
-            ->setMonthlyPayment($result['monthly_payment'])
-            ->setFirstName($result['first_name'])
-            ->setMiddleName($result['middle_name'])
-            ->setLastName($result['last_name'])
-            ->setPhone($result['phone'])
-            ->setEmail($result['email'])
-            ->setLoanNumber($result['loan_number']);
+        return (new Credit($result['id'] ?? '', $result['link'] ?? ''))
+            ->setCreatedAt(new \DateTime($result['created_at'] ?? ''))
+            ->setIsCommitted($result['committed'] ?? false)
+            ->setFirstPayment($result['first_payment'] ?? 0)
+            ->setOrderAmount($result['order_amount'] ?? 0)
+            ->setCreditAmount($result['credit_amount'] ?? 0)
+            ->setCreditType($result['product'] ?? '')
+            ->setMonthQty($result['term'] ?? 0)
+            ->setMonthlyPayment($result['monthly_payment'] ?? 0)
+            ->setFirstName($result['first_name'] ?? '')
+            ->setMiddleName($result['middle_name'] ?? '')
+            ->setLastName($result['last_name'] ?? '')
+            ->setPhone($result['phone'] ?? '')
+            ->setEmail($result['email'] ?? '')
+            ->setStatus($result['status'] ?? '')
+            ->setLoanNumber($result['loan_number'] ?? '');
     }
 
     /**
