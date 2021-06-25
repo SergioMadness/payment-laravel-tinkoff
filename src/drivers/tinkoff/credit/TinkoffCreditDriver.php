@@ -87,7 +87,7 @@ class TinkoffCreditDriver implements PayService, TinkoffCreditService, PaymentAp
         ], config('payment.tinkoff-credit.isDemo', false));
 
         $this->setResponse([
-            'id' => $result->getId(),
+            'request_id' => $result->getId(),
         ]);
 
         return $result->getLink() ?? $failReturnUrl;
@@ -172,7 +172,7 @@ class TinkoffCreditDriver implements PayService, TinkoffCreditService, PaymentAp
      */
     public function getPaymentId(): string
     {
-        return '';//$this->getParam('id');
+        return $this->getParam('request_id');
     }
 
     /**
