@@ -86,6 +86,10 @@ class TinkoffCreditDriver implements PayService, TinkoffCreditService, PaymentAp
             ],
         ], config('payment.tinkoff-credit.isDemo', false));
 
+        $this->setResponse([
+            'id' => $result->getId(),
+        ]);
+
         return $result->getLink() ?? $failReturnUrl;
     }
 
