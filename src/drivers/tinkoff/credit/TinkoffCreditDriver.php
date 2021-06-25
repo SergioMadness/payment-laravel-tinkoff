@@ -71,6 +71,7 @@ class TinkoffCreditDriver implements PayService, TinkoffCreditService, PaymentAp
             'failURL'     => $failReturnUrl,
             'successURL'  => $successReturnUrl,
             'returnURL'   => $failReturnUrl,
+            'webhookURL'  => $extraParams['webhookURL'] ?? null,
             'values'      => [
                 'contact' => [
                     'fio'         => [
@@ -131,7 +132,8 @@ class TinkoffCreditDriver implements PayService, TinkoffCreditService, PaymentAp
      */
     public function validate(array $data): bool
     {
-        return $this->getTransport()->validate($data);
+        return true;
+//        return $this->getTinkoffProtocol()->validate($data);
     }
 
     /**
