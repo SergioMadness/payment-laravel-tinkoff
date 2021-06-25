@@ -167,7 +167,7 @@ class TinkoffCreditDriver implements PayService, TinkoffCreditService, PaymentAp
      */
     public function getPaymentId(): string
     {
-        return $this->getParam('id');
+        return '';//$this->getParam('id');
     }
 
     /**
