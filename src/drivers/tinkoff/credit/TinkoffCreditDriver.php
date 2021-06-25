@@ -9,6 +9,7 @@ use professionalweb\payment\contracts\PayService;
 use professionalweb\payment\contracts\PayProtocol;
 use professionalweb\payment\models\PayServiceOption;
 use professionalweb\payment\contracts\PaymentApprove;
+use professionalweb\payment\interfaces\models\Credit;
 use professionalweb\payment\interfaces\TinkoffProtocol;
 use professionalweb\payment\interfaces\TinkoffCreditService;
 
@@ -187,7 +188,7 @@ class TinkoffCreditDriver implements PayService, TinkoffCreditService, PaymentAp
      */
     public function isSuccess(): bool
     {
-        return $this->getParam('status') === 'approved';
+        return $this->getParam('status') === Credit::STATUS_SIGNED;
     }
 
     /**
