@@ -168,7 +168,7 @@ class TinkoffProtocol extends \TinkoffMerchantAPI implements PayProtocol, ITinko
     {
         $result = $this->sendRequest('get', 'https://forma.tinkoff.ru/api/partners/v2/orders/' . $id . '/info');
 
-        return (new Credit($result['id'], $result['link']))
+        return (new Credit($result['id'], $result['link'] ?? ''))
             ->setCreatedAt(new \DateTime($result['created_at']))
             ->setIsCommitted($result['committed'])
             ->setFirstPayment($result['first_payment'])
@@ -197,7 +197,7 @@ class TinkoffProtocol extends \TinkoffMerchantAPI implements PayProtocol, ITinko
     {
         $result = $this->sendRequest('post', 'https://forma.tinkoff.ru/api/partners/v2/orders/' . $id . '/commit');
 
-        return (new Credit($result['id'], $result['link']))
+        return (new Credit($result['id'], $result['link'] ?? ''))
             ->setCreatedAt(new \DateTime($result['created_at']))
             ->setIsCommitted($result['committed'])
             ->setFirstPayment($result['first_payment'])
@@ -226,7 +226,7 @@ class TinkoffProtocol extends \TinkoffMerchantAPI implements PayProtocol, ITinko
     {
         $result = $this->sendRequest('post', 'https://forma.tinkoff.ru/api/partners/v2/orders/' . $id . '/cancel');
 
-        return (new Credit($result['id'], $result['link']))
+        return (new Credit($result['id'], $result['link'] ?? ''))
             ->setCreatedAt(new \DateTime($result['created_at']))
             ->setIsCommitted($result['committed'])
             ->setFirstPayment($result['first_payment'])
