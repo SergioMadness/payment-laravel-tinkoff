@@ -73,6 +73,7 @@ class TinkoffCreditDriver implements PayService, TinkoffCreditService, PaymentAp
             'successURL'  => $successReturnUrl,
             'returnURL'   => $failReturnUrl,
             'webhookURL'  => $extraParams['webhookURL'] ?? null,
+            'promoCode'   => $extraParams['promoCode'] ?? null,
             'values'      => [
                 'contact' => [
                     'fio'         => [
