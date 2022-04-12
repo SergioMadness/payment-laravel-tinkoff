@@ -94,7 +94,7 @@ class TinkoffDriver implements PayService, TinkoffService, RecurringPayment
             if ($DATA !== '') {
                 $DATA .= '|';
             }
-            $DATA .= $key . '=' . $val;
+            $DATA .= $key . '=' . json_encode($val);
         });
         $data = [
             'OrderId'     => $orderId,
