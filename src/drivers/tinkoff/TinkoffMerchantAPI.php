@@ -248,11 +248,12 @@ class TinkoffMerchantAPI
     {
         $token = '';
         $args['Password'] = $this->_secretKey;
+
+        unset($args['Shops'], $args['Receipt'], $args['DATA']);
+
         ksort($args);
-        foreach ($args as $arg) {
-            $token .= $arg;
-        }
-        $token = hash('sha256', $token);
+
+        $token = hash('sha256', join('', $args));
 
         return $token;
     }
@@ -304,20 +305,14 @@ class TinkoffMerchantAPI
     private function _sendRequest($api_url, $args)
     {
         $this->_error = '';
-        //todo add string $args support
-        //$proxy = 'http://192.168.5.22:8080';
-        //$proxyAuth = '';
-        if (is_array($args)) {
-            $args = http_build_query($args);
-        }
-//        Debug::trace($args);
         if ($curl = curl_init()) {
             curl_setopt($curl, CURLOPT_URL, $api_url);
             curl_setopt($curl, CURLOPT_FOLLOWLOCATION, true);
             curl_setopt($curl, CURLOPT_RETURNTRANSFER, true);
             curl_setopt($curl, CURLOPT_SSL_VERIFYPEER, false);
             curl_setopt($curl, CURLOPT_POST, true);
-            curl_setopt($curl, CURLOPT_POSTFIELDS, $args);
+            curl_setopt($curl, CURLOPT_POSTFIELDS, json_encode($args));
+            curl_setopt($curl, CURLOPT_HTTPHEADER, ['Content-Type:application/json']);
             $out = curl_exec($curl);
 
             $this->_response = $out;

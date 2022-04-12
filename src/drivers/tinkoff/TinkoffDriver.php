@@ -78,7 +78,7 @@ class TinkoffDriver implements PayService, TinkoffService, RecurringPayment
      * @return string
      */
     public function getPaymentLink($orderId,
-                                   $paymentId,
+        $paymentId,
                                    float $amount,
                                    string $currency = self::CURRENCY_RUR_ISO,
                                    string $paymentType = self::PAYMENT_TYPE_CARD,
@@ -88,14 +88,10 @@ class TinkoffDriver implements PayService, TinkoffService, RecurringPayment
                                    array $extraParams = [],
                                    Receipt $receipt = null): string
     {
-        $extraParams['PaymentId'] = $paymentId;
-        $DATA = '';
-        array_walk($extraParams, function ($val, $key) use (&$DATA) {
-            if ($DATA !== '') {
-                $DATA .= '|';
-            }
-            $DATA .= $key . '=' . json_encode($val);
-        });
+        $DATA = [
+            'PaymentId' => $paymentId,
+            'OrderId'   => $orderId,
+        ];
         $data = [
             'OrderId'     => $orderId,
             'Amount'      => round($amount * 100),
@@ -407,7 +403,7 @@ class TinkoffDriver implements PayService, TinkoffService, RecurringPayment
      * @return IForm
      */
     public function getPaymentForm($orderId,
-                                   $paymentId,
+        $paymentId,
                                    float $amount,
                                    string $currency = self::CURRENCY_RUR,
                                    string $paymentType = self::PAYMENT_TYPE_CARD,
