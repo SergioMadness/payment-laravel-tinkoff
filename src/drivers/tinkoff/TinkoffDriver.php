@@ -91,6 +91,8 @@ class TinkoffDriver implements PayService, TinkoffService, RecurringPayment
         $DATA = [
             'PaymentId' => $paymentId,
             'OrderId'   => $orderId,
+            'Email'     => $extraParams['email'] ?? null,
+            'Phone'     => $extraParams['phone'] ?? null,
         ];
         $data = [
             'OrderId'     => $orderId,
@@ -372,7 +374,7 @@ class TinkoffDriver implements PayService, TinkoffService, RecurringPayment
      */
     public function getPaymentId(): string
     {
-        return $this->getResponseParam('PaymentId');
+        return $this->getResponseParam('DATA.PaymentId');
     }
 
     /**
