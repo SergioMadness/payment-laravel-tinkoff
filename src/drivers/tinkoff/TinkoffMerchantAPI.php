@@ -249,7 +249,7 @@ class TinkoffMerchantAPI
         $token = '';
         $args['Password'] = $this->_secretKey;
 
-        unset($args['Shops'], $args['Receipt'], $args['DATA']);
+        unset($args['Shops'], $args['Receipt'], $args['DATA'], $args['Data']);
 
         ksort($args);
 

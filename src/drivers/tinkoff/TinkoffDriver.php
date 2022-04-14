@@ -303,7 +303,7 @@ class TinkoffDriver implements PayService, TinkoffService, RecurringPayment
      */
     public function getNotificationResponse(int $errorCode = null): Response
     {
-        return response($this->getTransport()->getNotificationResponse($this->response, $this->mapError($errorCode)));
+        return new Response($this->getTransport()->getNotificationResponse($this->response, $this->mapError($errorCode)));
     }
 
     /**
@@ -315,7 +315,7 @@ class TinkoffDriver implements PayService, TinkoffService, RecurringPayment
      */
     public function getCheckResponse(int $errorCode = null): Response
     {
-        return response($this->getTransport()->getNotificationResponse($this->response, $this->mapError($errorCode)));
+        return new Response($this->getTransport()->getNotificationResponse($this->response, $this->mapError($errorCode)));
     }
 
     /**
