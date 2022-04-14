@@ -41,6 +41,14 @@ class TinkoffProtocol extends \TinkoffMerchantAPI implements PayProtocol, ITinko
     {
         $result = false;
 
+        $params = array_map(function ($item) {
+            if (is_bool($item)) {
+                $item = $item ? 'true' : 'false';
+            }
+
+            return $item;
+        }, $params);
+
         if (isset($params['Token'])) {
             $token = $params['Token'];
             unset($params['Token']);

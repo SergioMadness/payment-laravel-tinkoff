@@ -207,7 +207,7 @@ class TinkoffDriver implements PayService, TinkoffService, RecurringPayment
      */
     public function isSuccess(): bool
     {
-        return $this->getResponseParam('Success', 'false') === 'true';
+        return $this->getResponseParam('Success', false);
     }
 
     /**
@@ -374,7 +374,7 @@ class TinkoffDriver implements PayService, TinkoffService, RecurringPayment
      */
     public function getPaymentId(): string
     {
-        return $this->getResponseParam('DATA.PaymentId');
+        return $this->getResponseParam('Data.PaymentId');
     }
 
     /**
