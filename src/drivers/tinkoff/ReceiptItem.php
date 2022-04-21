@@ -47,9 +47,9 @@ class ReceiptItem extends IReceiptItem
     {
         return [
             'Name'     => mb_substr($this->getName(), 0, 128),
-            'Price'    => $this->getPrice(),
+            'Price'    => $this->getPrice() * 100,
             'Quantity' => $this->getQty(),
-            'Amount'   => $this->getPrice() * $this->getQty(),
+            'Amount'   => $this->getPrice() * 100 * $this->getQty(),
             'Tax'      => $this->getTax(),
         ];
     }

@@ -319,7 +319,7 @@ class TinkoffMerchantAPI
             $json = json_decode($out);
             if ($json) {
                 if (@$json->ErrorCode !== "0") {
-                    $this->_error = @$json->Details;
+                    $this->_error = @$json->Message;
                 } else {
                     $this->_paymentUrl = @$json->PaymentURL;
                     $this->_paymentId = @$json->PaymentId;

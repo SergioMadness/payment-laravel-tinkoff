@@ -102,7 +102,7 @@ class TinkoffDriver implements PayService, TinkoffService, RecurringPayment
             'DATA'        => $DATA,
         ];
         if ($receipt instanceof Arrayable) {
-            $data['Receipt'] = (string)$receipt;
+            $data['Receipt'] = $receipt->toArray();
         }
         if ($this->needRecurring()) {
             $data['Recurrent'] = 'Y';
