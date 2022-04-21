@@ -53,7 +53,7 @@ class Receipt extends IReceipt
      * @param array|null $items
      * @param int        $taxSystem
      */
-    public function __construct(?string $phone = null, ?string $email = null, array $items = [], ?int $taxSystem = null)
+    public function __construct(?string $phone = null, ?string $email = null, array $items = [], ?string $taxSystem = null)
     {
         parent::__construct($phone, $items, $taxSystem);
         $this->setEmail($email);
