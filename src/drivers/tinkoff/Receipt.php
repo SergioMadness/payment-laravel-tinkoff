@@ -55,7 +55,7 @@ class Receipt extends IReceipt
      */
     public function __construct(?string $phone = null, ?string $email = null, array $items = [], ?string $taxSystem = null)
     {
-        parent::__construct($phone, $items, $taxSystem);
+        parent::__construct($phone ?? $email, $items, $taxSystem);
         $this->setEmail($email);
     }
 
@@ -92,10 +92,12 @@ class Receipt extends IReceipt
         }, $this->getItems());
 
         $result = [
-            'Phone' => $this->getPhone(),
             'Email' => $this->getEmail(),
             'Items' => $items,
         ];
+        if ($this->getContact() !== $this->getEmail()) {
+            $result['Phone'] = $this->getContact();
+        }
         if (($taxSystem = $this->getTaxSystem()) !== null) {
             $result['Taxation'] = $taxSystem;
         }
