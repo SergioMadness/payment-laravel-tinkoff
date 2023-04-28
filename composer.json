@@ -27,9 +27,8 @@
     "source": "https://github.com/SergioMadness/payment-laravel-tinkoff/releases"
   },
   "require": {
-    "illuminate/support": "5.*",
     "alcohol/iso4217": "*",
-    "professionalweb/payment-laravel": "dev-develop"
+    "professionalweb/payment-laravel": "dev-improvement/upgrade-framework"
   },
   "require-dev": {
   },
