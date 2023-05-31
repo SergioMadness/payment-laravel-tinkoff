@@ -28,7 +28,7 @@
   },
   "require": {
     "alcohol/iso4217": "*",
-    "professionalweb/payment-laravel": "dev-improvement/upgrade-framework"
+    "professionalweb/payment-laravel": "dev-develop"
   },
   "require-dev": {
   },
